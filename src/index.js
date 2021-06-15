@@ -81,13 +81,38 @@ class Game extends React.Component {
     });
   }
 
+  getMoveLocation(previousStep, actualStep) {
+    const moveIndex = {
+      0: 'row: 1, col: 1',
+      1: 'row: 1, col: 2',
+      2: 'row: 1, col: 3',
+      3: 'row: 2, col: 1',
+      4: 'row: 2, col: 2',
+      5: 'row: 2, col: 3',
+      6: 'row: 3, col: 1',
+      7: 'row: 3, col: 2',
+      8: 'row: 3, col: 3',
+    }
+
+    for(let i = 0; i < 9; i++) {
+      if(previousStep.squares[i] !== actualStep.squares[i]) 
+        return moveIndex[i];
+    }
+
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
-      const desc = move ? `Go to move #${ move }` : 'Go to game start';
+      let desc = 'Go to game start';
+
+      if(move) {
+        const moveLocation = this.getMoveLocation(history[move - 1], step);
+        desc = `Go to move #${ move } (${ moveLocation })`;
+      }
       
       return (
       <li key={move}>
